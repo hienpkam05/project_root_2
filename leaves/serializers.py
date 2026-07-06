@@ -27,7 +27,7 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
     owner_username= serializers.CharField(source="owner.username",read_only=True)
     department_name=serializers.CharField(source="department.name",read_only=True)
     status_histories= LeaveStatusHistorySerializer(many=True,read_only=True)
-
+    # status_historied là 1 danh sách nhiều bản ghi 
     class Meta:
         model=LeaveRequest
         fields=[
@@ -47,12 +47,14 @@ class LeaveRequestSerializer(serializers.ModelSerializer):
             "hr_confirmed_at", "is_deleted", "deleted_at", "deleted_by",
             "created_at", "updated_at", "status_histories",
         ]
+
     def validate_total_day(self,value):
         if value <=0:
             raise serializers.ValidationError(
                 "Số ngày nghỉ phải lớn hơn 0."
             )
         return value
+    
     def validate(self, attrs):
         start_date= attrs.get("start_date")
         end_date= attrs.get("end_date")
